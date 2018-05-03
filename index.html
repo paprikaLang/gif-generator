@@ -9,8 +9,8 @@
 	<title>Gif-Generator</title>
 </head>
 <body>
-	   <div class="container-fluid">
-      <div class="row">
+<div class="container-fluid">
+    <div class="row">
         <nav class="col-md-2 d-none d-md-block bg-light sidebar">
           <div class="sidebar-sticky">
             source material
@@ -23,6 +23,26 @@
           </div>
 
           <canvas class="w-100" id="myAvatar" width="460" height="460"></canvas>
+          <div>
+          	<button class="btn btn-primary" onclick="downloadit()">下载图片</button>
+          </div>
+        </main>
+    </div>
+</div>
+<script>
+	var canvas = new fabric.Canvas('myAvatar');
+	var rect = new fabric.Rect({
+		left: 100,
+		top: 100,
+		fill: 'red',
+		width: 20,
+		height: 20
+	});
+	canvas.add(rect);
+	function downloadit() {
+		console.log(canvas.toDataURL('png'));//data:image/png;base64,iVBORw0KGg.....
+	}
+</script>
 
 </body>
 </html>
