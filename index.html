@@ -7,6 +7,7 @@
 	<script src="https://cdn.bootcss.com/fabric.js/2.2.3/fabric.min.js"></script>
 	<script src="https://cdn.bootcss.com/downloadjs/1.4.7/download.min.js"></script>
 	<script src="https://cdn.bootcss.com/keypress/2.1.5/keypress.min.js"></script>
+	<script src="https://cdn.bootcss.com/gif.js/0.2.0/gif.js"></script>
 	<link href="https://cdn.bootcss.com/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="main.css">
 	<title>Gif-Generator</title>
@@ -29,11 +30,14 @@
           <canvas class="w-100" id="myAvatar" width="460" height="460"></canvas>
           <div class="download">
           	<button class="btn btn-primary" onclick="downloadit()">下载图片</button>
-          	<button class="btn btn-outline-second" onclick="debug()">调试</button>
+          	<button class="btn btn-outline-second" onclick="debug()">调  试</button>
+          	<button class="btn btn-outline-second" onclick="pic_concat()">加入动图序列</button>
+          	<button class="btn btn-outline-second" onclick="gif_generate()">下载动图</button>
           </div>
           <div class="form-group editBar">
           	<input type="text" id="editText" class="form-control" placeholder="点击文本修改内容" disabled="disabled" onchange="update_text()" />
           </div>
+          <div class="gif-images"></div>
         </main>
     </div>
 </div>
@@ -42,6 +46,7 @@
 		//actived 的图片是否永远在最上面
 		preserveObjectStacking: true
 	});
+	canvas.backgroundColor = 'rgba(255,255,255,1)';
 
 	const debugTool = {
 		cornerSize: 10,
@@ -68,6 +73,31 @@
 		left: 70,
 	}).set(debugTool);
 	canvas.insertAt(text,1);
+	var lis = [];
+
+	function gif_generate() {
+		var gif = new GIF({
+			workers: 2,
+			quality: 10,
+			width: 460,
+			height: 460
+		});
+		$(".gif-images li img").each((index,item) => {
+             gif.addFrame(item, {delay: 1000});
+		});
+		gif.on('finished', function(blob) {
+		  download(blob,"avatar.gif","image/gif");
+		});
+
+		gif.render();
+
+	}
+	function pic_concat() {
+		var data_url = canvas.toDataURL('png');
+		var li = `<li><img src="${data_url}" width="200px" height="200px"/></li>`
+		lis.push(li);
+		document.querySelector('.gif-images').innerHTML = lis.join('');
+	}
 
 	function update_text() {
 	   (canvas.getActiveObject().type == "text") && $("#editText").val() ? refresh($("#editText").val()) :  alert("Choose a textarea to show your words!")

@@ -11,3 +11,11 @@ canvas {
 .editBar input {
 	max-width: 300px;
 }
+.gif-images >li {
+	/*不换行*/
+    display: inline-block; 
+    margin-right: 5px;
+}
+.gif-images {
+	padding: 0px;
+}
