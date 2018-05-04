@@ -31,6 +31,9 @@
           	<button class="btn btn-primary" onclick="downloadit()">下载图片</button>
           	<button class="btn btn-outline-second" onclick="debug()">调试</button>
           </div>
+          <div class="form-group editBar">
+          	<input type="text" id="editText" class="form-control" placeholder="点击文本修改内容" disabled="disabled" onchange="update_text()" />
+          </div>
         </main>
     </div>
 </div>
@@ -65,18 +68,29 @@
 		left: 70,
 	}).set(debugTool);
 	canvas.insertAt(text,1);
+
+	function update_text() {
+	   (canvas.getActiveObject().type == "text") && $("#editText").val() ? refresh($("#editText").val()) :  alert("Choose a textarea to show your words!")
+	}
+	function refresh(newText) {
+		canvas.getActiveObject().set('text',newText);
+		//类似iOS里的强制渲染,如果不要等到
+		canvas.renderAll();
+	}
+
 	function downloadit() {
 		//console.log(canvas.toDataURL('png'));//data:image/png;base64,iVBORw0KGg.....
 		download(canvas.toDataURL('png'),"avatar.png","image/png");
 	};
-	function debug() {
-		const activedObj = canvas.getActiveObject();
+	function message(activedObj) {
 		console.log(`angle = ${activedObj.angle}`);
 		console.log(`scaleX = ${activedObj.scaleX}`);
 		console.log(`scaleY = ${activedObj.scaleY}`);
 		console.log(`top = ${activedObj.top}`);
 		console.log(`left = ${activedObj.left}`);
-
+	}
+	function debug() {
+		canvas.getActiveObject() ? message(canvas.getActiveObject()) : alert("Choose One Object to debug");
 	};
 	$(function(){
 		var listener = new window.keypress.Listener();
@@ -92,7 +106,21 @@
 		listener.simple_combo("]",()=>{
 			canvas.getActiveObject() ? canvas.sendBackwards(canvas.getActiveObject()) : alert("Choose One Object bring it to the bottom!"); ;
 		})
+
+		text_listener();
 	});
+
+	function text_listener() {
+		$(canvas.getObjects()).each((index,item) => {
+			console.log(item.type);
+			if (item.type == 'text') {
+				item.on("selected", () => {
+					$("#editText").val(item.text);
+                    $("#editText").prop("disabled",false);
+				})
+			}
+		});
+	};
 </script>
 </body>
 </html>

@@ -4,3 +4,10 @@ canvas {
 .download {
 	margin-top: 50px;
 }
+.editBar {
+   margin-top: 10px;
+}
+
+.editBar input {
+	max-width: 300px;
+}
