@@ -5,7 +5,9 @@
 	<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 	<script src="https://cdn.bootcss.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 	<script src="https://cdn.bootcss.com/fabric.js/2.2.3/fabric.min.js"></script>
+	<script src="https://cdn.bootcss.com/downloadjs/1.4.7/download.min.js"></script>
 	<link href="https://cdn.bootcss.com/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="main.css">
 	<title>Gif-Generator</title>
 </head>
 <body>
@@ -13,7 +15,7 @@
     <div class="row">
         <nav class="col-md-2 d-none d-md-block bg-light sidebar">
           <div class="sidebar-sticky">
-            source material
+            <!-- source material -->
           </div>
         </nav>
 
@@ -23,7 +25,7 @@
           </div>
 
           <canvas class="w-100" id="myAvatar" width="460" height="460"></canvas>
-          <div>
+          <div class="download">
           	<button class="btn btn-primary" onclick="downloadit()">下载图片</button>
           </div>
         </main>
@@ -39,9 +41,14 @@
 		height: 20
 	});
 	canvas.add(rect);
+
+	fabric.Image.fromURL('avatar.png',function(oImg) {
+		canvas.add(oImg);
+	});
 	function downloadit() {
-		console.log(canvas.toDataURL('png'));//data:image/png;base64,iVBORw0KGg.....
-	}
+		//console.log(canvas.toDataURL('png'));//data:image/png;base64,iVBORw0KGg.....
+		download(canvas.toDataURL('png'),"avatar.png","image/png");
+	};
 </script>
 
 </body>
