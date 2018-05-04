@@ -83,12 +83,14 @@
 		listener.register_combo({
              "prevent_default": true
 		});
-		listener.simple_combo("cmd s",()=>{
-  
-			const deleteObj = canvas.getActiveObject();
-			if (deleteObj) {
-				canvas.remove(deleteObj);
-			}
+		listener.simple_combo("cmd x",()=>{
+		    canvas.getActiveObject() ? canvas.remove(canvas.getActiveObject()) : alert("Choose One Object to Delete!!!");
+		});
+		listener.simple_combo("[",()=>{
+			canvas.getActiveObject() ? canvas.bringForward(canvas.getActiveObject()) : alert("Choose One Object bring it to the top!"); ;
+		});
+		listener.simple_combo("]",()=>{
+			canvas.getActiveObject() ? canvas.sendBackwards(canvas.getActiveObject()) : alert("Choose One Object bring it to the bottom!"); ;
 		})
 	});
 </script>
