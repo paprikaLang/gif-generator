@@ -6,11 +6,13 @@
 	<script src="https://cdn.bootcss.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 	<script src="https://cdn.bootcss.com/fabric.js/2.2.3/fabric.min.js"></script>
 	<script src="https://cdn.bootcss.com/downloadjs/1.4.7/download.min.js"></script>
+	<script src="https://cdn.bootcss.com/keypress/2.1.5/keypress.min.js"></script>
 	<link href="https://cdn.bootcss.com/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="main.css">
 	<title>Gif-Generator</title>
 </head>
 <body>
+
 <div class="container-fluid">
     <div class="row">
         <nav class="col-md-2 d-none d-md-block bg-light sidebar">
@@ -37,14 +39,7 @@
 		//actived 的图片是否永远在最上面
 		preserveObjectStacking: true
 	});
-	var rect = new fabric.Rect({
-		left: 100,
-		top: 100,
-		fill: 'red',
-		width: 20,
-		height: 20
-	});
-	canvas.insertAt(rect,0);
+
 	const debugTool = {
 		cornerSize: 10,
 		padding: 5 ,
@@ -54,12 +49,13 @@
 		borderColor: 'red'}
 
 	fabric.Image.fromURL('avatar.png',function(oImg) {
-		canvas.insertAt(oImg,1);
-		oImg.set('scaleX',0.6);
-		oImg.set('scaleY',0.6);
-		oImg.set('top', 80);
-		oImg.set('left',40);
-		oImg.set(debugTool);
+		canvas.insertAt(oImg,0);
+		oImg.set({
+			scaleX:0.6,
+			scaleY:0.6,
+			top: 80,
+			left:40
+		}).set(debugTool);
 	});
 	const text = new fabric.Text('boring cookie no eat',{
 		left: 100,
@@ -67,9 +63,8 @@
 		fill:'white',
 		scale: 0.6,
 		left: 70,
-		...debugTool
-	});
-	canvas.insertAt(text,2);
+	}).set(debugTool);
+	canvas.insertAt(text,1);
 	function downloadit() {
 		//console.log(canvas.toDataURL('png'));//data:image/png;base64,iVBORw0KGg.....
 		download(canvas.toDataURL('png'),"avatar.png","image/png");
@@ -82,9 +77,21 @@
 		console.log(`top = ${activedObj.top}`);
 		console.log(`left = ${activedObj.left}`);
 
-	}
+	};
+	$(function(){
+		var listener = new window.keypress.Listener();
+		listener.register_combo({
+             "prevent_default": true
+		});
+		listener.simple_combo("cmd s",()=>{
+  
+			const deleteObj = canvas.getActiveObject();
+			if (deleteObj) {
+				canvas.remove(deleteObj);
+			}
+		})
+	});
 </script>
-
 </body>
 </html>
 
