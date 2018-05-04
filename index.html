@@ -27,12 +27,16 @@
           <canvas class="w-100" id="myAvatar" width="460" height="460"></canvas>
           <div class="download">
           	<button class="btn btn-primary" onclick="downloadit()">下载图片</button>
+          	<button class="btn btn-outline-second" onclick="debug()">调试</button>
           </div>
         </main>
     </div>
 </div>
 <script>
-	var canvas = new fabric.Canvas('myAvatar');
+	var canvas = new fabric.Canvas('myAvatar',{
+		//actived 的图片是否永远在最上面
+		preserveObjectStacking: true
+	});
 	var rect = new fabric.Rect({
 		left: 100,
 		top: 100,
@@ -40,16 +44,53 @@
 		width: 20,
 		height: 20
 	});
-	canvas.add(rect);
+	canvas.insertAt(rect,0);
+	const debugTool = {
+		cornerSize: 10,
+		padding: 5 ,
+		transparentCorners: true,
+		cornerStyle: 'circle',
+		cornerColor: 'red',
+		borderColor: 'red'}
 
 	fabric.Image.fromURL('avatar.png',function(oImg) {
-		canvas.add(oImg);
+		canvas.insertAt(oImg,1);
+		oImg.set('scaleX',0.6);
+		oImg.set('scaleY',0.6);
+		oImg.set('top', 80);
+		oImg.set('left',40);
+		oImg.set(debugTool);
 	});
+	const text = new fabric.Text('boring cookie no eat',{
+		left: 100,
+		top: 100,
+		fill:'white',
+		scale: 0.6,
+		left: 70,
+		...debugTool
+	});
+	canvas.insertAt(text,2);
 	function downloadit() {
 		//console.log(canvas.toDataURL('png'));//data:image/png;base64,iVBORw0KGg.....
 		download(canvas.toDataURL('png'),"avatar.png","image/png");
 	};
+	function debug() {
+		const activedObj = canvas.getActiveObject();
+		console.log(`angle = ${activedObj.angle}`);
+		console.log(`scaleX = ${activedObj.scaleX}`);
+		console.log(`scaleY = ${activedObj.scaleY}`);
+		console.log(`top = ${activedObj.top}`);
+		console.log(`left = ${activedObj.left}`);
+
+	}
 </script>
 
 </body>
 </html>
+
+
+
+
+
+
+
